@@ -1,2 +1,2 @@
-# LoR-Bot
-Discord Bot for Legends of Runeterra
+# Riot-Bot
+Discord Bot for Riot Games (League of Legends, Teamfight Tactics, Valorant)
