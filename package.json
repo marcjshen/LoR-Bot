@@ -1,0 +1,22 @@
+{
+  "name": "lorbot",
+  "version": "1.0.0",
+  "description": "Bot for Legends of Runeterra",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcjshen/LoR-Bot.git"
+  },
+  "author": "Marc Shen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marcjshen/LoR-Bot/issues"
+  },
+  "homepage": "https://github.com/marcjshen/LoR-Bot#readme",
+  "dependencies": {
+    "discord.js": "^12.3.1"
+  }
+}
