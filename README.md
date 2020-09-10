@@ -1,2 +1,2 @@
 # Riot-Bot
-Discord Bot for Riot Games (League of Legends, Teamfight Tactics, Valorant)
+Discord Bot that uses the Riot API to give you info about your League of Legends, Teamfight Tactics, and Valorant accounts
