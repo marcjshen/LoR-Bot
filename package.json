@@ -1,7 +1,7 @@
 {
-  "name": "lorbot",
+  "name": "riotbot",
   "version": "1.0.0",
-  "description": "Bot for Legends of Runeterra",
+  "description": "Bot for Riot Games",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -18,5 +18,10 @@
   "homepage": "https://github.com/marcjshen/LoR-Bot#readme",
   "dependencies": {
     "discord.js": "^12.3.1"
+  },
+  "devDependencies": {
+    "curl": "^0.1.4",
+    "jquery": "^3.5.1",
+    "jsdom": "^16.4.0"
   }
 }
