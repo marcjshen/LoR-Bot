@@ -17,7 +17,8 @@
   },
   "homepage": "https://github.com/marcjshen/LoR-Bot#readme",
   "dependencies": {
-    "discord.js": "^12.3.1"
+    "discord.js": "^12.3.1",
+    "node-fetch": "^2.6.1"
   },
   "devDependencies": {
     "curl": "^0.1.4",
