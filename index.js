@@ -135,9 +135,9 @@ client.on("message", function(message) {
 client.login(config.BOT_TOKEN);
 
 //https://na1.api.riotgames.com//lol/champion-mastery/v4/champion-masteries/by-summoner/RMlTn4qDtlvJnKWt6tuC_8-SyWKczU43AMYPZTJxvTxohgfT?api_key=RGAPI-b7a436fa-0f1c-4ca9-aa27-d37e42ef947e
-// ^ maybe use to see who can still earn a chest
+// ^ use to see who can still earn a chest
 //champion masteries, not owned or champ doesnt exist
 //undefined summoner name
 //update general help commands
 //champinfo (general), http://ddragon.leagueoflegends.com/cdn/10.20.1/data/en_US/champion.json\
-// need puuid for most shit, look through docs again
+// need puuid for most things, look through docs again
