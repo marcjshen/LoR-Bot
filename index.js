@@ -69,8 +69,10 @@ client.on("message", async function(message) {
       else if (args[0] == "rank" && args.length == 2) {
         var username = args[1];
         var summonerID;
-        var flexed;
+        var info;
         var solo;
+        var flexed;
+
         var ranks = '*' + username + "*'s Ranked Info: \n";
         try {
           await fetch('https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/' + username + '?api_key=' + API_KEY)
@@ -80,9 +82,16 @@ client.on("message", async function(message) {
           await fetch('https://na1.api.riotgames.com/lol/league/v4/entries/by-summoner/' + summonerID + '?api_key=' + API_KEY)
             .then(response => response.json())
             .then(data => {
-              flexed = data[0];
-              solo = data[1];
+              info = data;
             });
+          if (info[0].queueType == "RANKED_SOLO_5x5") {
+            solo = info[0];
+            flexed = info[1];
+          }
+          else {
+            solo = info[1];
+            flexed = info[0];
+          }
           ranks += "Ranked Solo/Duo: **" + solo.tier + ' ' + solo.rank + '**, LP: **' + solo.leaguePoints + '**, W/L: **' + solo.wins 
             + '/' + solo.losses + "**\n";
           ranks += "Ranked Flexed: **" + flexed.tier + ' ' + flexed.rank + '**, LP: **' + flexed.leaguePoints + '**, W/L: **' 
