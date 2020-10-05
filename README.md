@@ -5,7 +5,9 @@ Discord Bot that uses the Riot API to give you info about your League of Legends
 
 ## Current functionality
 ### League of Legends
-- retrieve Summoner Level of a specified user
+- retrieve Summoner level given a username
+- retrieve Summoner champion info given a username and champion name
+- retrieve solo/duo and flexed ranked info given a username
 
 ### Teamfight Tactics
 

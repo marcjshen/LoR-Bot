@@ -2,14 +2,15 @@ const Discord = require("discord.js");
 const config = require("./config.json");
 const client = new Discord.Client();
 const fetch = require("node-fetch");
+const { queue } = require("jquery");
 
 const API_KEY = 'RGAPI-b7a436fa-0f1c-4ca9-aa27-d37e42ef947e';
 
 client.login(config.BOT_TOKEN);
 
-const prefix = "!"; // used to indicate bot command
+const prefix = "!"; 
  
-client.on("message", function(message) { 
+client.on("message", async function(message) { 
     if (message.author.bot) return;
     if (!message.content.startsWith(prefix)) return;
 
@@ -27,11 +28,13 @@ client.on("message", function(message) {
 
       // LOL help (list of commands)
       if (args[0] == "help" && args.length == 1) {
-        message.reply("available: summonerlevel(username)");
+        message.reply("available LOL commands: \n`!lol level {username}` - returns summoner level \n" 
+        + "`!lol champinfo {username} {champion name}` - returns summoner-specific champion info \n"
+        + "`!lol rank {username}` - returns summoner-specific ranked info \n");
       } 
 
       // Summoner level
-      else if (args[0] == "summonerlevel" && args.length == 2) {
+      else if (args[0] == "level" && args.length == 2) {
         var username = args[1];
         fetch('https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/' + username + '?api_key=' + API_KEY)
           .then(response => response.json())
@@ -44,34 +47,50 @@ client.on("message", function(message) {
         var champ = args[2];
         var summonerID;
         var champKey;
-        fetch('https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/' + username + '?api_key=' + API_KEY)
-          .then(response => response.json())
-          .then(data => summonerID = data.id);
-        fetch('http://ddragon.leagueoflegends.com/cdn/10.20.1/data/en_US/champion.json')
-          .then(response => response.json())
-          .then(data => champKey = data.data[champ].key);
-        message.reply(summonerID);
-        message.reply(champKey);
-
-        // fetch('https://na1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/' + summonerID + '/by-champion/' + champKey + '?api_key=' + API_KEY)
-        //   .then(response => response.json())
-        //   .then(data => message.reply(username + "'s " + champ + ': \n Mastery Level: ' + data.championLevel + '\n Chest available: ' + data.chestGranted + '\n Tokens Earned: ' + data.tokensEarned));
-          
-
+        try {
+          await fetch('https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/' + username + '?api_key=' + API_KEY)
+            .then(response => response.json())
+            .then(data => summonerID = data.id);
+          await fetch('http://ddragon.leagueoflegends.com/cdn/10.20.1/data/en_US/champion.json')
+            .then(response => response.json())
+            .then(data => champKey = data.data[champ].key);
+          fetch('https://na1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/' 
+            + summonerID + '/by-champion/' + champKey + '?api_key=' + API_KEY)
+            .then(response => response.json())
+            .then(data => message.reply('*' + username + '*' + "'s " + champ + ': \n Mastery Level: ' + '**' + data.championLevel 
+              + '**' + '\n Chest Already Earned: ' + '**' + data.chestGranted + '**' + '\n Tokens Earned: ' + '**' 
+              + data.tokensEarned + '**'));
+        } catch {
+          message.reply('specified champion does not exist')
+        }
       }
 
       // Ranked info
       else if (args[0] == "rank" && args.length == 2) {
         var username = args[1];
         var summonerID;
-        fetch('https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/' + username + '?api_key=' + API_KEY)
-          .then(response => response.json())
-          .then(data => summonerID = data.id);
+        var flexed;
+        var solo;
+        var ranks = '*' + username + "*'s Ranked Info: \n";
+        try {
+          await fetch('https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/' + username + '?api_key=' + API_KEY)
+            .then(response => response.json())
+            .then(data => summonerID = data.id);
 
-        message.reply(summonerID);
-        fetch('https://na1.api.riotgames.com/lol/league/v4/entries/by-summoner/' + summonerID + '?api_key=' + API_KEY)
-          .then(response => response.json())
-          .then(data => message.reply(data));
+          await fetch('https://na1.api.riotgames.com/lol/league/v4/entries/by-summoner/' + summonerID + '?api_key=' + API_KEY)
+            .then(response => response.json())
+            .then(data => {
+              flexed = data[0];
+              solo = data[1];
+            });
+          ranks += "Ranked Solo/Duo: **" + solo.tier + ' ' + solo.rank + '**, LP: **' + solo.leaguePoints + '**, W/L: **' + solo.wins 
+            + '/' + solo.losses + "**\n";
+          ranks += "Ranked Flexed: **" + flexed.tier + ' ' + flexed.rank + '**, LP: **' + flexed.leaguePoints + '**, W/L: **' 
+            + flexed.wins + '/' + flexed.losses + '**';
+          message.reply(ranks);
+        } catch {
+          message.reply("summoner not found");
+        }
       }
 
 
@@ -134,10 +153,3 @@ client.on("message", function(message) {
 
 client.login(config.BOT_TOKEN);
 
-//https://na1.api.riotgames.com//lol/champion-mastery/v4/champion-masteries/by-summoner/RMlTn4qDtlvJnKWt6tuC_8-SyWKczU43AMYPZTJxvTxohgfT?api_key=RGAPI-b7a436fa-0f1c-4ca9-aa27-d37e42ef947e
-// ^ use to see who can still earn a chest
-//champion masteries, not owned or champ doesnt exist
-//undefined summoner name
-//update general help commands
-//champinfo (general), http://ddragon.leagueoflegends.com/cdn/10.20.1/data/en_US/champion.json\
-// need puuid for most things, look through docs again
